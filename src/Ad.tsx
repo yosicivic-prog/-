@@ -86,7 +86,7 @@ const Tagline: React.FC = () => {
   );
 };
 
-const Grain: React.FC = () => {
+export const Grain: React.FC = () => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{mixBlendMode: 'overlay', opacity: 0.16, pointerEvents: 'none'}}>

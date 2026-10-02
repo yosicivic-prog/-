@@ -41,11 +41,11 @@ const HALF: ToothDef[] = [
   {w: 0.68, h: 0.8, d: 0.62, mis: [-0.04, 0.03, -0.1, -0.25, 0.04]},
   {w: 0.66, h: 0.78, d: 0.62, mis: [0.03, 0, 0.05, 0.12, -0.03]},
 ];
-const R = 3.4;
+export const R = 3.4;
 const GAP = 0.0;
 
 type Placed = ToothDef & {side: 1 | -1; s: number};
-const placed: Placed[] = (() => {
+export const placed: Placed[] = (() => {
   const out: Placed[] = [];
   for (const side of [1, -1] as const) {
     let s = GAP;
@@ -57,7 +57,7 @@ const placed: Placed[] = (() => {
   return out;
 })();
 
-const toothGeometry = (w: number, h: number, d: number, pow = 0.62) => {
+export const toothGeometry = (w: number, h: number, d: number, pow = 0.62) => {
   let g: THREE.BufferGeometry = new THREE.SphereGeometry(1, 48, 36);
   g.deleteAttribute('uv');
   g.deleteAttribute('normal');
@@ -79,7 +79,7 @@ const toothGeometry = (w: number, h: number, d: number, pow = 0.62) => {
   return g;
 };
 
-const pose = (t: Placed, p: number) => {
+export const pose = (t: Placed, p: number) => {
   const a = t.s / R;
   const k = 1 - p;
   const [dx, dy, dz, ry, rz] = t.mis;
