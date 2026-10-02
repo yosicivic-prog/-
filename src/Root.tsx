@@ -1,15 +1,15 @@
 import {Composition} from 'remotion';
-import {HelloWorld} from './HelloWorld';
+import {Ad} from './Ad';
 
 export const RemotionRoot: React.FC = () => {
   return (
     <Composition
-      id="HelloWorld"
-      component={HelloWorld}
-      durationInFrames={90}
+      id="CelebSmileAd"
+      component={Ad}
+      durationInFrames={600}
       fps={30}
-      width={1280}
-      height={720}
+      width={1080}
+      height={1920}
     />
   );
 };
