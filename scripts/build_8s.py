@@ -1,0 +1,98 @@
+"""Generates the HyperFrames 8s ad (he + en) from one template."""
+import os, shutil
+
+STR = {
+ 'he': dict(lang='he', dir='rtl', h1='מפסיקים להסתיר', h2='את החיוך', l1='יישור שיניים', l2='בקשתיות שקופות', off='40% הנחה', cta='שלחו הודעה עכשיו'),
+ 'en': dict(lang='en', dir='ltr', h1='Stop hiding', h2='your smile', l1='Clear teeth', l2='alignment', off='40% off', cta='Message us now'),
+}
+TEMPLATE = r'''<!doctype html>
+<html lang="{lang}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face {{ font-family: "Heebo"; src: url("assets/fonts/heebo-hebrew-wght-normal.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F; }}
+      @font-face {{ font-family: "Heebo"; src: url("assets/fonts/heebo-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }}
+      * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+      html, body {{ margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }}
+      #root {{ position: relative; width: 100%; height: 100%; background: #000; font-family: "Heebo", sans-serif; color: #fff; overflow: hidden; }}
+      .abs {{ position: absolute; left: 0; right: 0; }}
+      .hook {{ top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }}
+      .hook .line {{ font-size: 122px; font-weight: 800; line-height: 1.12; letter-spacing: -2px; }}
+      .hook .line.accent {{ color: #8ff5e6; }}
+      #glow {{ top: 520px; height: 900px; background: radial-gradient(ellipse at 50% 50%, rgba(63,200,190,.30) 0%, rgba(20,80,100,.14) 42%, rgba(0,0,0,0) 70%); }}
+      .alg {{ position: absolute; left: 20px; width: 1040px; top: 640px; mix-blend-mode: screen; filter: brightness(1.25) contrast(1.1) saturate(1.1); }}
+      .end {{ top: 0; bottom: 0; }}
+      .brand {{ top: 230px; text-align: center; font-size: 40px; font-weight: 700; letter-spacing: 12px; color: #8ff5e6; }}
+      .headline {{ top: 950px; text-align: center; font-size: 76px; font-weight: 700; line-height: 1.3; }}
+      .off {{ top: 1235px; text-align: center; font-size: 210px; font-weight: 900; line-height: 1; color: #8ff5e6; letter-spacing: -3px; text-shadow: 0 0 60px rgba(63,200,190,.45); }}
+      .ctawrap {{ top: 1480px; display: flex; justify-content: center; }}
+      .cta {{ display: flex; align-items: center; gap: 22px; font-size: 56px; font-weight: 700; color: #04201f; background: #8ff5e6; padding: 26px 58px; border-radius: 80px; }}
+      .cta svg {{ width: 60px; height: 60px; fill: #04201f; }}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1080" data-height="1920">
+      <audio id="music" src="assets/music8.wav" data-start="0" data-duration="8" data-track-index="9" data-volume="0.85" data-fade-out="0.8"></audio>
+
+      <div id="hook" class="clip abs hook" data-start="0" data-duration="2.1" data-track-index="0" dir="{dir}">
+        <div id="hook1" class="line">{h1}</div>
+        <div id="hook2" class="line accent">{h2}</div>
+      </div>
+
+      <div id="aligners" class="clip abs" style="top:0;bottom:0" data-start="2" data-duration="6" data-track-index="1">
+        <div id="glow" class="abs"></div>
+        <img id="alg1" class="alg" src="assets/aligner1.png" alt="" />
+        <img id="alg2" class="alg" src="assets/aligner2.png" alt="" />
+        <img id="alg3" class="alg" src="assets/aligner3.png" alt="" />
+        <img id="alg4" class="alg" src="assets/aligner4.png" alt="" />
+      </div>
+
+      <div id="end" class="clip abs end" data-start="5" data-duration="3" data-track-index="2" dir="{dir}">
+        <div id="brand" class="abs brand">CELEB SMILE</div>
+        <div id="headline" class="abs headline"><div>{l1}</div><div>{l2}</div></div>
+        <div id="off" class="abs off">{off}</div>
+        <div id="ctawrap" class="abs ctawrap"><div class="cta"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 0 0-.6.3 2.4 2.4 0 0 0-.8 1.8c0 1 .7 2 .8 2.1a8.8 8.8 0 0 0 3.4 3c1.3.5 1.8.6 2.5.5.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1z"/></svg><span>{cta}</span></div></div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({{ paused: true }});
+      // 0-2s: black + hook text
+      tl.fromTo("#hook1", {{ opacity: 0, y: 50 }}, {{ opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }}, 0.15);
+      tl.fromTo("#hook2", {{ opacity: 0, y: 50 }}, {{ opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }}, 0.42);
+      tl.to("#hook1, #hook2", {{ opacity: 0, y: -30, duration: 0.3, ease: "power2.in" }}, 1.75);
+
+      // 2-5s: aligners drift in, one dissolves into the next
+      tl.fromTo("#glow", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.8, ease: "sine.out" }}, 2.0);
+      const seq = [["#alg1", 2.0, 3.0, -2.5, 1.5], ["#alg2", 2.75, 3.85, 2, -1.5], ["#alg3", 3.5, 4.6, -1.5, 1], ["#alg4", 4.25, 5.2, 1.5, -1]];
+      seq.forEach(([id, t, outAt, r0, r1], i) => {{
+        tl.fromTo(id, {{ opacity: 0, scale: 0.9, y: 40, rotation: r0 }}, {{ opacity: 1, scale: 1, y: 0, rotation: r1, duration: 1.0, ease: "power2.out" }}, t);
+        if (i < 3) tl.to(id, {{ opacity: 0, scale: 1.06, duration: 0.5, ease: "sine.in" }}, outAt + 0.2);
+      }});
+
+      // 5-8s: last aligner settles up as hero, offer + CTA enter
+      tl.to("#alg4", {{ y: -330, scale: 0.78, rotation: 0, duration: 0.9, ease: "power3.inOut" }}, 5.0);
+      tl.to("#glow", {{ y: -280, duration: 0.9, ease: "power3.inOut" }}, 5.0);
+      tl.fromTo("#brand", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.5 }}, 5.2);
+      tl.fromTo("#headline", {{ opacity: 0, y: 40 }}, {{ opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }}, 5.45);
+      tl.fromTo("#off", {{ opacity: 0, scale: 0.8, y: 30 }}, {{ opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(1.6)" }}, 5.75);
+      tl.fromTo("#ctawrap", {{ opacity: 0, y: 40 }}, {{ opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }}, 6.25);
+      tl.to("#ctawrap", {{ scale: 1.04, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }}, 6.95);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
+'''
+src = 'videos/celeb-smile-8s'
+for code, s in STR.items():
+    dst = src if code == 'he' else 'videos/celeb-smile-8s-en'
+    if code != 'he':
+        os.makedirs(dst, exist_ok=True)
+        for f in ('hyperframes.json', 'package.json', 'meta.json'):
+            shutil.copy(f'{src}/{f}', f'{dst}/{f}')
+        shutil.copytree(f'{src}/assets', f'{dst}/assets', dirs_exist_ok=True)
+    open(f'{dst}/index.html', 'w').write(TEMPLATE.format(**s))
+print('ok')
