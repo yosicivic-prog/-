@@ -28,20 +28,16 @@ const makeStudio = () => {
 
 export const Studio: React.FC<{rot: number}> = ({rot}) => {
   const {gl, scene} = useThree();
-  useEffect(() => {
+  // built synchronously so frame 0 of every render tab already has the studio lighting
+  const env = useMemo(() => {
     const pm = new THREE.PMREMGenerator(gl);
-    const env = pm.fromScene(makeStudio(), 0.02).texture;
-    scene.environment = env;
-    scene.environmentIntensity = 1;
-    return () => {
-      scene.environment = null;
-      env.dispose();
-      pm.dispose();
-    };
-  }, [gl, scene]);
-  useEffect(() => {
-    scene.environmentRotation = new THREE.Euler(0, rot, 0);
-  }, [scene, rot]);
+    const t = pm.fromScene(makeStudio(), 0.02).texture;
+    pm.dispose();
+    return t;
+  }, [gl]);
+  scene.environment = env;
+  scene.environmentIntensity = 1;
+  scene.environmentRotation = new THREE.Euler(0, rot, 0);
   return null;
 };
 
