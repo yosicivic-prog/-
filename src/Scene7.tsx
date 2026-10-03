@@ -26,7 +26,7 @@ const makeStudio = () => {
   return room;
 };
 
-const Studio: React.FC<{rot: number}> = ({rot}) => {
+export const Studio: React.FC<{rot: number}> = ({rot}) => {
   const {gl, scene} = useThree();
   useEffect(() => {
     const pm = new THREE.PMREMGenerator(gl);
@@ -45,7 +45,7 @@ const Studio: React.FC<{rot: number}> = ({rot}) => {
   return null;
 };
 
-const gradientBackdrop = () => {
+export const gradientBackdrop = () => {
   const c = document.createElement('canvas');
   c.width = 64;
   c.height = 512;
@@ -60,7 +60,7 @@ const gradientBackdrop = () => {
 };
 
 // open the shell at the gum side so it reads as a thin hollow tray rather than a glass blob
-const openShell = (g: THREE.BufferGeometry, yCut: number) => {
+export const openShell = (g: THREE.BufferGeometry, yCut: number) => {
   const pos = g.attributes.position;
   const idx = g.index!;
   const keep: number[] = [];
