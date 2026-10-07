@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="he">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/heebo-hebrew-wght-normal.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F; }
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/heebo-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 100%; height: 100%; background: #000; font-family: "Heebo", sans-serif; color: #fff; overflow: hidden; }
+      .abs { position: absolute; left: 0; right: 0; }
+      .hook { top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      .hook .line { font-size: 122px; font-weight: 800; line-height: 1.12; letter-spacing: -2px; }
+      .hook .line.accent { color: #8ff5e6; }
+      #broll { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      #veil { top: 0; bottom: 0; background: #000; }
+      .pill { display: flex; justify-content: center; }
+      .pill > div { background: rgba(4, 24, 28, .62); border: 2px solid rgba(143, 245, 230, .45); border-radius: 60px; padding: 18px 46px; font-size: 56px; font-weight: 700; }
+      #cap { top: 1440px; }
+      #sim { top: 1578px; text-align: center; font-size: 34px; font-weight: 500; color: rgba(255,255,255,.88); text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+      #end { top: 0; bottom: 0; background: #031a1d; }
+      .glowbg { top: 340px; height: 900px; background: radial-gradient(ellipse at 50% 40%, rgba(63,200,190,.22) 0%, rgba(20,80,100,.10) 45%, rgba(0,0,0,0) 72%); }
+      .brand { top: 470px; text-align: center; font-size: 46px; font-weight: 700; letter-spacing: 14px; color: #8ff5e6; }
+      .headline { top: 650px; text-align: center; font-size: 82px; font-weight: 800; line-height: 1.25; }
+      .off { top: 950px; text-align: center; font-size: 230px; font-weight: 900; line-height: 1; color: #8ff5e6; letter-spacing: -3px; text-shadow: 0 0 60px rgba(63,200,190,.45); }
+      .ctawrap { top: 1320px; display: flex; justify-content: center; }
+      .cta { display: flex; align-items: center; gap: 22px; font-size: 58px; font-weight: 700; color: #04201f; background: #8ff5e6; padding: 28px 62px; border-radius: 80px; }
+      .cta svg { width: 62px; height: 62px; fill: #04201f; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1080" data-height="1920">
+      <audio id="music" src="assets/music8.wav" data-start="0" data-duration="8" data-track-index="9" data-volume="0.85" data-fade-out="0.8"></audio>
+
+      <div id="hook" class="clip abs hook" data-start="0" data-duration="1.9" data-track-index="0" dir="rtl">
+        <div id="hook1" class="line">מפסיקים להסתיר</div>
+        <div id="hook2" class="line accent">את החיוך</div>
+      </div>
+
+      <video id="broll" class="clip" src="assets/broll.mp4" data-start="1.5" data-duration="4.43" data-track-index="1" muted playsinline></video>
+      <div id="veil" class="clip abs" data-start="1.5" data-duration="4.43" data-track-index="2"></div>
+      <div id="cap" class="clip abs pill" data-start="2.2" data-duration="3.4" data-track-index="3" dir="rtl"><div>קשתיות שקופות בהתאמה אישית</div></div>
+      <div id="sim" class="clip abs" data-start="2.2" data-duration="3.4" data-track-index="4" dir="rtl">הדמיה מואצת להמחשה</div>
+
+      <div id="end" class="clip abs" data-start="5.6" data-duration="2.4" data-track-index="5" dir="rtl">
+        <div class="abs glowbg"></div>
+        <div id="brand" class="abs brand">CELEB SMILE</div>
+        <div id="headline" class="abs headline"><div>יישור שיניים</div><div>בקשתיות שקופות</div></div>
+        <div id="off" class="abs off">40% הנחה</div>
+        <div id="ctawrap" class="abs ctawrap"><div class="cta"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 0 0-.6.3 2.4 2.4 0 0 0-.8 1.8c0 1 .7 2 .8 2.1a8.8 8.8 0 0 0 3.4 3c1.3.5 1.8.6 2.5.5.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1z"/></svg><span>שלחו הודעה עכשיו</span></div></div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      // 0-1.9s hook on black
+      tl.fromTo("#hook1", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.1);
+      tl.fromTo("#hook2", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.35);
+      tl.to("#hook1, #hook2", { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, 1.6);
+      // 1.5-5.9s photoreal b-roll (2x speed)
+      tl.fromTo("#veil", { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "sine.out" }, 1.5);
+      tl.fromTo("#broll", { scale: 1.0 }, { scale: 1.06, duration: 4.4, ease: "none", transformOrigin: "50% 45%" }, 1.5);
+      tl.fromTo("#cap", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.2);
+      tl.fromTo("#sim", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 2.5);
+      tl.to("#veil", { opacity: 1, duration: 0.3, ease: "sine.in" }, 5.3);
+      // 5.6-8s end card
+      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.6);
+      tl.fromTo("#brand", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 5.75);
+      tl.fromTo("#headline", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 5.9);
+      tl.fromTo("#off", { opacity: 0, scale: 0.8, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.6)" }, 6.2);
+      tl.fromTo("#ctawrap", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 6.6);
+      tl.to("#ctawrap", { scale: 1.04, duration: 0.4, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }, 7.1);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
