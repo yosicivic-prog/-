@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="he">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/heebo-hebrew-wght-normal.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F; }
+      @font-face { font-family: "Heebo"; src: url("assets/fonts/heebo-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+      :root { --ground: #031a1d; --ink: #ffffff; --accent: #8ff5e6; --deep: #04201f; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--ground); }
+      #root { position: relative; width: 100%; height: 100%; background: var(--ground); font-family: "Heebo", sans-serif; color: var(--ink); overflow: hidden; }
+      #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; display: block; }
+      .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      /* keeps the title readable over the 3D scene */
+      #scrim { background: linear-gradient(180deg, rgba(2,15,18,.94) 0px, rgba(2,15,18,.78) 330px, rgba(2,15,18,0) 700px); }
+      .title { position: absolute; left: 90px; width: 900px; top: 228px; text-align: center; }
+      .title .ln { font-size: 116px; font-weight: 900; line-height: 1.12; letter-spacing: -2px; white-space: nowrap; }
+      .title .ln.sm { font-size: 92px; letter-spacing: -1.5px; line-height: 1.2; }
+      .title .ln.ac { color: var(--accent); }
+      .w { display: inline-block; }
+      #sim { position: absolute; left: 0; width: 1080px; top: 170px; display: flex; justify-content: center; }
+      #sim span { font-size: 30px; font-weight: 500; line-height: 1; color: #fff; background: rgba(2,15,18,.82); padding: 12px 26px; border-radius: 30px; }
+      /* end card */
+      #end-veil { background: linear-gradient(180deg, rgba(3,26,29,.97) 0px, rgba(3,26,29,.95) 1010px, rgba(3,26,29,0) 1300px); }
+      #end-brand { position: absolute; left: 0; width: 1080px; top: 236px; text-align: center; font-size: 46px; font-weight: 700; letter-spacing: 14px; color: var(--accent); }
+      #end-head { position: absolute; left: 90px; width: 900px; top: 338px; text-align: center; font-size: 80px; font-weight: 800; line-height: 1.22; white-space: nowrap; }
+      #end-offwrap { position: absolute; left: 0; width: 1080px; top: 568px; height: 250px; perspective: 1400px; }
+      #end-off { width: 1080px; text-align: center; font-size: 172px; font-weight: 900; line-height: 250px; color: var(--accent); letter-spacing: -3px; white-space: nowrap;
+        text-shadow: 0 1px 0 #6fd9cb, 0 2px 0 #63cabd, 0 3px 0 #58bbaf, 0 4px 0 #4dada1, 0 5px 0 #439e94, 0 6px 0 #399087, 0 7px 0 #30827a, 0 8px 0 #28746d, 0 9px 0 #206760, 0 10px 0 #195a54, 0 22px 46px rgba(0,0,0,.55), 0 0 70px rgba(63,200,190,.35); }
+      #end-ctawrap { position: absolute; left: 0; width: 1080px; top: 898px; display: flex; justify-content: center; }
+      #end-cta { display: flex; align-items: center; gap: 22px; font-size: 58px; font-weight: 800; color: var(--deep); background: var(--accent); padding: 28px 62px; border-radius: 80px; box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+      #end-cta svg { width: 62px; height: 62px; fill: var(--deep); }
+      #ret { position: absolute; left: 0; top: 0; width: 150px; height: 200px; }
+      #ret i { position: absolute; width: 46px; height: 46px; border: 0 solid var(--accent); filter: drop-shadow(0 0 8px rgba(63,200,190,.8)); }
+      #ret i:nth-child(1) { left: 0; top: 0; border-left-width: 7px; border-top-width: 7px; border-top-left-radius: 14px; }
+      #ret i:nth-child(2) { right: 0; top: 0; border-right-width: 7px; border-top-width: 7px; border-top-right-radius: 14px; }
+      #ret i:nth-child(3) { left: 0; bottom: 0; border-left-width: 7px; border-bottom-width: 7px; border-bottom-left-radius: 14px; }
+      #ret i:nth-child(4) { right: 0; bottom: 0; border-right-width: 7px; border-bottom-width: 7px; border-bottom-right-radius: 14px; }
+      #stage-wrap { position: absolute; left: 0; width: 1080px; top: 514px; display: flex; justify-content: center; }
+      #stage-chip { display: flex; align-items: center; gap: 26px; background: rgba(4,24,28,.78); border: 2px solid rgba(143,245,230,.45); border-radius: 60px; padding: 16px 40px; font-size: 50px; font-weight: 800; }
+      #stage-bar { display: flex; gap: 10px; direction: ltr; }
+      #stage-bar b { display: block; width: 74px; height: 12px; border-radius: 12px; background: rgba(255,255,255,.2); overflow: hidden; }
+      #stage-bar i { display: block; width: 74px; height: 12px; background: var(--accent); transform-origin: 0 50%; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="13" data-width="1080" data-height="1920">
+      <canvas id="stage" class="clip" data-layout-ignore data-start="0" data-duration="13" data-track-index="0" width="1080" height="1920"></canvas>
+      <div id="scrim" class="clip full" data-start="0" data-duration="9.8" data-track-index="1"></div>
+      <div id="t1" class="clip title" data-start="0" data-duration="1.78" data-track-index="2" dir="rtl"><div class="ln "><span class="w">תעקבו</span> <span class="w">אחרי</span></div><div class="ln ac "><span class="w">השן</span> <span class="w">הזאת</span></div></div>
+      <div id="t2" class="clip title" data-start="1.9" data-duration="6.08" data-track-index="3" dir="rtl"><div class="ln "><span class="w">כל</span> <span class="w">קשתית</span></div><div class="ln ac "><span class="w">מזיזה</span> <span class="w">עוד</span> <span class="w">קצת</span></div></div>
+      <div id="t3" class="clip title" data-start="8.05" data-duration="1.75" data-track-index="4" dir="rtl"><div class="ln "><span class="w">ככה</span> <span class="w">מיישרים.</span></div><div class="ln ac "><span class="w">בלי</span> <span class="w">גשר.</span></div></div>
+      <div id="sim" class="clip" data-start="0" data-duration="9.8" data-track-index="6" dir="rtl"><span>הדמיה מואצת להמחשה בלבד</span></div>
+      <div id="ret-clip" class="clip full" data-start="0" data-duration="8.4" data-track-index="5" data-layout-ignore><div id="ret"><i></i><i></i><i></i><i></i></div></div>
+      <div id="stage-wrap" class="clip" data-start="1.75" data-duration="6.6" data-track-index="7" dir="rtl"><div id="stage-chip"><span>שלב <span id="stage-num">1</span></span><div id="stage-bar"><b><i></i></b><b><i></i></b><b><i></i></b><b><i></i></b></div></div></div>
+      <div id="end" class="clip full" data-start="9.8" data-duration="3.2" data-track-index="8" dir="rtl">
+        <div id="end-veil" class="full"></div>
+        <div id="end-brand">CELEB SMILE</div>
+        <div id="end-head"><div id="end-h1">יישור שיניים</div><div id="end-h2">בקשתיות שקופות</div></div>
+        <div id="end-offwrap"><div id="end-off">40% הנחה</div></div>
+        <div id="end-ctawrap"><div id="end-cta"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 0 0-.6.3 2.4 2.4 0 0 0-.8 1.8c0 1 .7 2 .8 2.1a8.8 8.8 0 0 0 3.4 3c1.3.5 1.8.6 2.5.5.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1z"/></svg><span>שלחו הודעה עכשיו</span></div></div>
+      </div>
+      <audio id="sound" src="assets/sound.wav" data-start="0" data-duration="13.0" data-track-index="9" data-volume="0.9"></audio>
+    </div>
+    <script type="importmap">
+      { "imports": { "three": "./assets/three.module.min.js" } }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { W, H, makeRenderer, makeEnvironment, makeBackground, makeBokeh, makeMaterials, buildSmile, buildArch, addLights, toScreen, CROWDING, clamp01, mix, ease, ramp, track, spring } from "./assets/smile3d.js";
+      const renderer = makeRenderer(document.getElementById("stage"));
+      const scene = new THREE.Scene();
+      scene.environment = makeEnvironment(renderer);
+      scene.background = makeBackground();
+      const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 120);
+      const lights = addLights(scene);
+      const bokeh = makeBokeh();
+      scene.add(bokeh.group);
+      // move the whole picture down by px (keeps perspective): frames the subject under the title
+      const shift = (px) => camera.setViewOffset(W, H, 0, -px, W, H);
+      const END = 9.8;
+
+      const smile = buildSmile({ crowding: CROWDING.strong });
+      scene.add(smile.group);
+      const M = smile.materials;
+      const hero = smile.upper.teeth[1];
+      const T0 = 1.75, GAP = 1.55, IN = 0.5, MOVE = 0.95;
+      const targets = [0.3, 0.58, 0.82, 1];
+      const ret = document.getElementById("ret");
+      const stageNum = document.getElementById("stage-num");
+      const segs = [...document.querySelectorAll("#stage-bar i")];
+      const align = (t) => {
+        let p = 0, prev = 0;
+        targets.forEach((to, i) => {
+          p += (to - prev) * ramp(t, T0 + i * GAP + IN, T0 + i * GAP + IN + MOVE, ease.io);
+          prev = to;
+        });
+        return p;
+      };
+      // which tray is on, how far off the teeth it is, and how visible
+      const tray = (t) => {
+        if (t < T0) return { shape: targets[0], off: 1, op: 0, n: 0 };
+        let i = Math.min(targets.length - 1, Math.floor((t - T0) / GAP));
+        const x = clamp01((t - (T0 + i * GAP)) / IN);
+        if (i === 0) return { shape: targets[0], off: 1 - Math.min(1.03, spring(t, T0, IN * 1.1)), op: clamp01(x * 2.5), n: 1 };
+        if (x < 0.42) return { shape: targets[i - 1], off: ease.in(x / 0.42), op: 1 - x / 0.42, n: i };
+        return { shape: targets[i], off: 1 - Math.min(1.03, spring(t, T0 + i * GAP + IN * 0.42, IN * 0.75)), op: clamp01((x - 0.42) / 0.3), n: i + 1 };
+      };
+      const DONE = T0 + 3 * GAP + IN + MOVE; // teeth straight
+      function renderAt(t) {
+        const p = align(t);
+        const tr = tray(t);
+        smile.set(p, tr.shape, 0.03);
+        const away = 0.35 * ramp(t, DONE + 0.25, DONE + 0.9, ease.io); // the last tray eases off the finished smile and is gone
+        const off = Math.max(tr.off, away);
+        M.shell.opacity = tr.op * (1 - ramp(t, DONE + 0.3, DONE + 0.85));
+        for (const a of [smile.upper, smile.lower]) {
+          a.shellGroup.visible = M.shell.opacity > 0.01;
+          a.shellGroup.position.set(0, -0.95 * off, 1.25 * off);
+          a.shellGroup.rotation.x = 0.3 * off;
+        }
+        bokeh.update(t);
+        scene.environmentRotation.set(0, 0.7 - t * 0.2, 0);
+        // one move: from a macro on the tooth out to the whole smile
+        const k = ramp(t, T0 - 0.1, DONE + 0.2, ease.io);
+        const push = 0.6 * ramp(t, 0, T0, ease.out);
+        camera.position.set(
+          mix(1.75, -1.1, k) + track(t, [[END, 0], [END + 1.2, 1.2], [END + 3.4, 2.2]], ease.ioSine),
+          mix(0.1, 0.5, k),
+          mix(8.4 - push, 17.4, k) + track(t, [[END, 0], [END + 1.2, 2.2]], ease.io),
+        );
+        camera.lookAt(mix(1.02, 0, k), mix(0.08, -0.75, k), mix(-0.5, -0.5, k));
+        shift(mix(120, 50, k) + track(t, [[END, 0], [END + 1.2, 510]], ease.io));
+        camera.updateMatrixWorld();
+        // marker that stays on the tooth
+        const s = toScreen(hero, camera);
+        const dist = camera.position.distanceTo(hero.getWorldPosition(new THREE.Vector3()));
+        const px = (1.0 / (2 * dist * Math.tan((15 * Math.PI) / 180))) * H;
+        const lock = 1 + 0.3 * (1 - ramp(t, 0, 0.55, ease.out));
+        const gone = ramp(t, DONE - 0.1, DONE + 0.35, ease.out);
+        ret.style.transform = `translate(${(s.x - 75).toFixed(2)}px, ${(s.y - 100 + 14).toFixed(2)}px) scale(${((px / 200) * lock * (1 + 0.5 * gone)).toFixed(4)})`;
+        ret.style.opacity = (1 - gone).toFixed(3);
+        // stage counter
+        stageNum.textContent = String(Math.max(1, tr.n));
+        segs.forEach((el, i) => {
+          el.style.transform = `scaleX(${ramp(t, T0 + i * GAP + IN, T0 + i * GAP + IN + MOVE, ease.io).toFixed(4)})`;
+        });
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+      renderAt(window.__hfThreeTime || 0);
+    </script>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      // title in: word by word, blur to sharp, no slide
+      const wordsIn = (sel, at) => tl.fromTo(sel + " .w", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, stagger: 0.075, ease: "power2.out" }, at);
+      // title out: one blur-out
+      const blurOut = (sel, at) => tl.to(sel, { opacity: 0, filter: "blur(12px)", duration: 0.2, ease: "power2.in" }, at);
+      const END = 9.8;
+
+      blurOut("#t1", 1.55);
+      wordsIn("#t2", 1.9);
+      blurOut("#t2", 7.75);
+      wordsIn("#t3", 8.05);
+      blurOut("#t3", END - 0.25);
+      tl.fromTo("#stage-chip", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 1.75);
+      tl.to("#stage-chip", { opacity: 0, duration: 0.25 }, 8.0);
+      tl.to("#sim", { opacity: 0, duration: 0.25 }, END - 0.25);
+
+      // ---- end card: the mark and the offer land while the 3D keeps turning underneath ----
+      tl.fromTo("#end-veil", { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.inOut" }, END);
+      tl.fromTo("#end-brand", { opacity: 0, scale: 1.22 }, { opacity: 1, scale: 1, duration: 0.7, ease: "expo.out", transformOrigin: "50% 50%" }, END + 0.12);
+      tl.fromTo("#end-h1", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.25, ease: "power2.out" }, END + 0.3);
+      tl.fromTo("#end-h2", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.25, ease: "power2.out" }, END + 0.42);
+      tl.fromTo("#end-off", { opacity: 0, rotationY: -78, scale: 0.72 }, { opacity: 1, rotationY: 0, scale: 1, duration: 0.75, ease: "back.out(1.5)", transformOrigin: "50% 50%" }, END + 0.6);
+      tl.fromTo("#end-cta", { opacity: 0, y: 46 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, END + 0.8);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
